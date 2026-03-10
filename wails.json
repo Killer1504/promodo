@@ -6,6 +6,13 @@
   "frontend:build": "npm run build",
   "frontend:dev:watcher": "npm run dev",
   "frontend:dev:serverUrl": "auto",
+  "info": {
+    "productVersion": "1.0.0",
+    "companyName": "hung le",
+    "productName": "Pomodoro Focus Timer",
+    "copyright": "Copyright 2026 hung le",
+    "comments": "A sleek desktop Pomodoro timer built with Wails"
+  },
   "author": {
     "name": "hung le",
     "email": "thanhhungbkhn@gmail.com"
