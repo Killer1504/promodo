@@ -4,10 +4,12 @@
  */
 import { ProgressRing } from '../components/progress-ring.js';
 import { SessionDots } from '../components/session-dots.js';
+import { SoundPlayer } from '../components/sound-player.js';
 
 export class TimerView {
     constructor(container) {
         this.container = container;
+        this.sound = new SoundPlayer();
         this.state = {
             status: 'idle',
             sessionType: 'focus',
@@ -109,9 +111,26 @@ export class TimerView {
         }
     }
 
-    handleSessionComplete(data) {
-        // Refresh state to get break countdown
+    async handleSessionComplete(data) {
+        // Play the appropriate chime
+        const type = data?.sessionType || 'focus';
+        await this._syncMute();
+        if (type === 'focus') {
+            this.sound.play('focus');
+        } else if (data?.nextBreakType === 'long') {
+            this.sound.play('longBreak');
+        } else {
+            this.sound.play('break');
+        }
+        // Refresh timer state
         this.loadInitialState();
+    }
+
+    async _syncMute() {
+        try {
+            const settings = await window.go?.main?.App?.GetSettings();
+            if (settings) this.sound.muted = !!settings.mute;
+        } catch { /* keep current mute state */ }
     }
 
     updateDisplay() {
