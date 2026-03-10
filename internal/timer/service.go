@@ -76,17 +76,22 @@ type Service struct {
 
 // NewService creates a new timer Service.
 func NewService(repo *storage.Repository, notifier *notification.Notifier) *Service {
-	return &Service{
-		repo:            repo,
-		notifier:        notifier,
-		status:          StatusIdle,
-		sessionType:     SessionFocus,
-		cycle:           0,
+	s := &Service{
+		repo:        repo,
+		notifier:    notifier,
+		status:      StatusIdle,
+		sessionType: SessionFocus,
+		cycle:       0,
+		// Defaults — immediately overwritten by refreshSettings below
 		focusDuration:   1500,
 		shortBreakDur:   300,
 		longBreakDur:    900,
 		sessionsForLong: 4,
 	}
+	// Load real user settings so GetState() returns the correct duration
+	// even before the first StartFocus() call.
+	s.refreshSettings()
+	return s
 }
 
 // SetContext stores the Wails runtime context for event emission.
@@ -281,11 +286,19 @@ func (s *Service) RestoreState(sessionType string, remaining int, cycle int) {
 
 // stateLocked builds a TimerState (must hold mu).
 func (s *Service) stateLocked() TimerState {
+	remaining := s.remaining
+	total := s.total
+	// In idle state the timer hasn't started yet; show the upcoming focus duration
+	// so the READY screen displays the correct countdown (not 00:00).
+	if s.status == StatusIdle {
+		remaining = s.focusDuration
+		total = s.focusDuration
+	}
 	return TimerState{
 		Status:           s.status,
 		SessionType:      s.sessionType,
-		RemainingSeconds: s.remaining,
-		TotalSeconds:     s.total,
+		RemainingSeconds: remaining,
+		TotalSeconds:     total,
 		CyclePosition:    s.cycle,
 	}
 }
