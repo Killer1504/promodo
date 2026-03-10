@@ -1,19 +1,104 @@
-# README
+# 🍅 Pomodoro Focus Timer
 
-## About
+A sleek desktop Pomodoro timer built with [Wails v2](https://wails.io/) — Go backend + vanilla JS/HTML/CSS frontend.
 
-This is the official Wails Vanilla template.
+![Go](https://img.shields.io/badge/Go-1.24-00ADD8?logo=go&logoColor=white)
+![Wails](https://img.shields.io/badge/Wails-v2.11-red)
+![SQLite](https://img.shields.io/badge/SQLite-embedded-003B57?logo=sqlite)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-You can configure the project by editing `wails.json`. More information about the project settings can be found
-here: https://wails.io/docs/reference/project-config
+## ✨ Features
 
-## Live Development
+- **Focus Timer** — 25/5/15 min Pomodoro cycles with visual ring countdown
+- **Session Tracking** — automatic cycle progression (4 focus → long break)
+- **Stats Dashboard** — daily session count, weekly Chart.js bar chart
+- **Settings** — customizable durations, light/dark/system theme, mute toggle
+- **Persistence** — SQLite storage, paused session restoration across restarts
+- **OS Notifications** — alerts when focus sessions or breaks end
+- **Keyboard Accessible** — visible focus indicators on all controls
 
-To run in live development mode, run `wails dev` in the project directory. This will run a Vite development
-server that will provide very fast hot reload of your frontend changes. If you want to develop in a browser
-and have access to your Go methods, there is also a dev server that runs on http://localhost:34115. Connect
-to this in your browser, and you can call your Go code from devtools.
+## 📦 Prerequisites
 
-## Building
+| Tool | Version | Install |
+|------|---------|---------|
+| **Go** | 1.24+ | [go.dev/dl](https://go.dev/dl/) |
+| **Node.js** | 18+ | [nodejs.org](https://nodejs.org/) |
+| **Wails CLI** | v2 | `go install github.com/wailsapp/wails/v2/cmd/wails@latest` |
 
-To build a redistributable, production mode package, use `wails build`.
+> **Windows**: also requires [WebView2 runtime](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) (included in Windows 11+).
+
+## 🚀 Quick Start
+
+```bash
+# 1. Clone
+git clone <repo-url>
+cd pomodoro-timer
+
+# 2. Install frontend dependencies
+cd frontend && npm install && cd ..
+
+# 3. Development mode (hot-reload)
+wails dev
+
+# 4. Production build
+wails build
+```
+
+The built binary will be in `build/bin/`.
+
+## 🧪 Running Tests
+
+```bash
+# All Go tests (35 tests across 5 packages)
+go test -v -count=1 ./internal/...
+
+# Individual packages
+go test -v ./internal/timer/...
+go test -v ./internal/storage/...
+go test -v ./internal/settings/...
+go test -v ./internal/stats/...
+go test -v ./internal/notification/...
+```
+
+## 📂 Project Structure
+
+```
+pomodoro-timer/
+├── main.go                     # Wails app entry point
+├── app.go                      # App struct — all frontend bindings
+├── internal/
+│   ├── timer/                  # Timer state machine
+│   ├── storage/                # SQLite database + repository
+│   ├── settings/               # Settings validation service
+│   ├── stats/                  # Stats aggregation service
+│   └── notification/           # OS notification wrapper
+├── frontend/
+│   ├── index.html              # App shell
+│   └── src/
+│       ├── main.js             # Router + theme detection
+│       ├── components/         # Tab bar, progress ring, session dots
+│       ├── views/              # Timer, stats, settings views
+│       └── styles/             # CSS design system (light + dark)
+├── specs/                      # Feature specifications
+└── wails.json                  # Wails configuration
+```
+
+## 🎨 Themes
+
+Supports **Light**, **Dark**, and **System** (auto-detect) themes. Configured in Settings and applied instantly without restart.
+
+## 📊 Data Storage
+
+All data is stored locally in `~/.pomodoro-timer/`:
+
+| File | Purpose |
+|------|---------|
+| `pomodoro.db` | SQLite — sessions + settings |
+| `paused_session.json` | Saved state on app close |
+| `pomodoro.log` | Structured log output |
+
+Data auto-cleans sessions older than 30 days on startup.
+
+## 📝 License
+
+MIT
