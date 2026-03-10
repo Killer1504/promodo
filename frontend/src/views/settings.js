@@ -3,14 +3,14 @@
  * Duration steppers, theme toggle, mute switch, and reset.
  */
 export class SettingsView {
-    constructor(container) {
-        this.container = container;
-        this.settings = null;
-        this.render();
-    }
+  constructor(container) {
+    this.container = container;
+    this.settings = null;
+    this.render();
+  }
 
-    render() {
-        this.container.innerHTML = `
+  render() {
+    this.container.innerHTML = `
       <div class="settings-view">
         <div class="settings-section">
           <div class="settings-section-title">Durations</div>
@@ -85,128 +85,135 @@ export class SettingsView {
 
         <div class="settings-reset">
           <button class="btn-reset" id="btn-reset-defaults">Reset to Defaults</button>
+          <button class="btn-quit" id="btn-quit-app">⏻ Quit Application</button>
         </div>
       </div>
     `;
 
-        this.bindEvents();
+    this.bindEvents();
+  }
+
+  bindEvents() {
+    // Number steppers
+    this.container.querySelectorAll('.number-stepper button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const stepper = btn.closest('.number-stepper');
+        const field = stepper.dataset.field;
+        const min = parseInt(stepper.dataset.min);
+        const max = parseInt(stepper.dataset.max);
+        const step = parseInt(btn.dataset.step);
+        const valueEl = stepper.querySelector('.stepper-value');
+        const current = parseInt(valueEl.textContent);
+        const next = Math.min(max, Math.max(min, current + step));
+        valueEl.textContent = next;
+        this.saveSettings();
+      });
+    });
+
+    // Theme selector
+    this.container.querySelectorAll('.theme-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        this.container.querySelectorAll('.theme-option').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.applyTheme(btn.dataset.theme);
+        this.saveSettings();
+      });
+    });
+
+    // Mute toggle
+    const muteToggle = document.getElementById('mute-toggle');
+    if (muteToggle) {
+      muteToggle.addEventListener('change', () => this.saveSettings());
     }
 
-    bindEvents() {
-        // Number steppers
-        this.container.querySelectorAll('.number-stepper button').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const stepper = btn.closest('.number-stepper');
-                const field = stepper.dataset.field;
-                const min = parseInt(stepper.dataset.min);
-                const max = parseInt(stepper.dataset.max);
-                const step = parseInt(btn.dataset.step);
-                const valueEl = stepper.querySelector('.stepper-value');
-                const current = parseInt(valueEl.textContent);
-                const next = Math.min(max, Math.max(min, current + step));
-                valueEl.textContent = next;
-                this.saveSettings();
-            });
-        });
-
-        // Theme selector
-        this.container.querySelectorAll('.theme-option').forEach(btn => {
-            btn.addEventListener('click', () => {
-                this.container.querySelectorAll('.theme-option').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                this.applyTheme(btn.dataset.theme);
-                this.saveSettings();
-            });
-        });
-
-        // Mute toggle
-        const muteToggle = document.getElementById('mute-toggle');
-        if (muteToggle) {
-            muteToggle.addEventListener('change', () => this.saveSettings());
-        }
-
-        // Reset
-        const resetBtn = document.getElementById('btn-reset-defaults');
-        if (resetBtn) {
-            resetBtn.addEventListener('click', () => this.resetDefaults());
-        }
+    // Reset
+    const resetBtn = document.getElementById('btn-reset-defaults');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => this.resetDefaults());
     }
 
-    async onActivate() {
-        await this.loadSettings();
+    // Quit app
+    const quitBtn = document.getElementById('btn-quit-app');
+    if (quitBtn) {
+      quitBtn.addEventListener('click', () => window.go?.main?.App?.QuitApp());
     }
+  }
 
-    async loadSettings() {
-        try {
-            const app = window.go?.main?.App;
-            if (!app) return;
+  async onActivate() {
+    await this.loadSettings();
+  }
 
-            const s = await app.GetSettings();
-            if (!s) return;
-            this.settings = s;
+  async loadSettings() {
+    try {
+      const app = window.go?.main?.App;
+      if (!app) return;
 
-            // DB stores seconds — display as minutes
-            document.getElementById('val-focus').textContent = Math.round((s.focusDuration || 1500) / 60);
-            document.getElementById('val-short').textContent = Math.round((s.shortBreakDuration || 300) / 60);
-            document.getElementById('val-long').textContent = Math.round((s.longBreakDuration || 900) / 60);
-            document.getElementById('val-sessions').textContent = s.sessionsBeforeLongBreak || 4;
+      const s = await app.GetSettings();
+      if (!s) return;
+      this.settings = s;
 
-            // Theme
-            const theme = s.theme || 'system';
-            this.container.querySelectorAll('.theme-option').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.theme === theme);
-            });
+      // DB stores seconds — display as minutes
+      document.getElementById('val-focus').textContent = Math.round((s.focusDuration || 1500) / 60);
+      document.getElementById('val-short').textContent = Math.round((s.shortBreakDuration || 300) / 60);
+      document.getElementById('val-long').textContent = Math.round((s.longBreakDuration || 900) / 60);
+      document.getElementById('val-sessions').textContent = s.sessionsBeforeLongBreak || 4;
 
-            // Mute
-            const muteToggle = document.getElementById('mute-toggle');
-            if (muteToggle) muteToggle.checked = !!s.mute;
-        } catch (err) {
-            console.error('Failed to load settings:', err);
-        }
+      // Theme
+      const theme = s.theme || 'system';
+      this.container.querySelectorAll('.theme-option').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.theme === theme);
+      });
+
+      // Mute
+      const muteToggle = document.getElementById('mute-toggle');
+      if (muteToggle) muteToggle.checked = !!s.mute;
+    } catch (err) {
+      console.error('Failed to load settings:', err);
     }
+  }
 
-    async saveSettings() {
-        try {
-            const app = window.go?.main?.App;
-            if (!app) return;
+  async saveSettings() {
+    try {
+      const app = window.go?.main?.App;
+      if (!app) return;
 
-            const activeTheme = this.container.querySelector('.theme-option.active');
-            const muteToggle = document.getElementById('mute-toggle');
+      const activeTheme = this.container.querySelector('.theme-option.active');
+      const muteToggle = document.getElementById('mute-toggle');
 
-            // Convert minutes (displayed) to seconds (stored)
-            const settings = {
-                focusDuration: parseInt(document.getElementById('val-focus').textContent) * 60,
-                shortBreakDuration: parseInt(document.getElementById('val-short').textContent) * 60,
-                longBreakDuration: parseInt(document.getElementById('val-long').textContent) * 60,
-                sessionsBeforeLongBreak: parseInt(document.getElementById('val-sessions').textContent),
-                notificationSound: this.settings?.notificationSound || 'bell',
-                mute: muteToggle?.checked || false,
-                theme: activeTheme?.dataset.theme || 'system',
-            };
+      // Convert minutes (displayed) to seconds (stored)
+      const settings = {
+        focusDuration: parseInt(document.getElementById('val-focus').textContent) * 60,
+        shortBreakDuration: parseInt(document.getElementById('val-short').textContent) * 60,
+        longBreakDuration: parseInt(document.getElementById('val-long').textContent) * 60,
+        sessionsBeforeLongBreak: parseInt(document.getElementById('val-sessions').textContent),
+        notificationSound: this.settings?.notificationSound || 'bell',
+        mute: muteToggle?.checked || false,
+        theme: activeTheme?.dataset.theme || 'system',
+      };
 
-            await app.UpdateSettings(settings);
-        } catch (err) {
-            console.error('Failed to save settings:', err);
-        }
+      await app.UpdateSettings(settings);
+    } catch (err) {
+      console.error('Failed to save settings:', err);
     }
+  }
 
-    async resetDefaults() {
-        try {
-            const app = window.go?.main?.App;
-            if (!app) return;
+  async resetDefaults() {
+    try {
+      const app = window.go?.main?.App;
+      if (!app) return;
 
-            await app.ResetToDefaults();
-            await this.loadSettings();
-        } catch (err) {
-            console.error('Failed to reset settings:', err);
-        }
+      await app.ResetToDefaults();
+      await this.loadSettings();
+    } catch (err) {
+      console.error('Failed to reset settings:', err);
     }
+  }
 
-    applyTheme(theme) {
-        if (theme === 'system') {
-            document.documentElement.removeAttribute('data-theme');
-        } else {
-            document.documentElement.dataset.theme = theme;
-        }
+  applyTheme(theme) {
+    if (theme === 'system') {
+      document.documentElement.removeAttribute('data-theme');
+    } else {
+      document.documentElement.dataset.theme = theme;
     }
+  }
 }

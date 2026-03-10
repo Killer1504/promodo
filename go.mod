@@ -3,13 +3,13 @@ module pomodoro-timer
 go 1.24.0
 
 require (
+	git.sr.ht/~jackmordaunt/go-toast v1.1.2
 	github.com/gen2brain/beeep v0.11.2
 	github.com/wailsapp/wails/v2 v2.11.0
 	modernc.org/sqlite v1.46.1
 )
 
 require (
-	git.sr.ht/~jackmordaunt/go-toast v1.1.2 // indirect
 	github.com/bep/debounce v1.2.1 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/esiqveland/notify v0.13.3 // indirect

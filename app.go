@@ -11,6 +11,8 @@ import (
 	"pomodoro-timer/internal/notification"
 	"pomodoro-timer/internal/storage"
 	"pomodoro-timer/internal/timer"
+
+	wailsRuntime "github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // PausedSessionResponse is the frontend-facing paused session data.
@@ -93,6 +95,16 @@ func (a *App) shutdown(ctx context.Context) {
 	}
 
 	slog.Info("app shutdown")
+}
+
+// QuitApp performs a clean exit — saves state then quits the process.
+func (a *App) QuitApp() {
+	wailsRuntime.Quit(a.ctx)
+}
+
+// ShowWindow restores the window if it was hidden via X button.
+func (a *App) ShowWindow() {
+	wailsRuntime.WindowShow(a.ctx)
 }
 
 // --- Timer bindings ---

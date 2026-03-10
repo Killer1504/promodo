@@ -19,13 +19,13 @@ type FocusSession struct {
 
 // UserSettings represents the user's persisted preferences.
 type UserSettings struct {
-	FocusDuration          int
-	ShortBreakDuration     int
-	LongBreakDuration      int
-	SessionsBeforeLongBreak int
-	NotificationSound      string
-	Mute                   bool
-	Theme                  string
+	FocusDuration           int    `json:"focusDuration"`
+	ShortBreakDuration      int    `json:"shortBreakDuration"`
+	LongBreakDuration       int    `json:"longBreakDuration"`
+	SessionsBeforeLongBreak int    `json:"sessionsBeforeLongBreak"`
+	NotificationSound       string `json:"notificationSound"`
+	Mute                    bool   `json:"mute"`
+	Theme                   string `json:"theme"`
 }
 
 // DailyStats holds aggregated focus data for a single day.
