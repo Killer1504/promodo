@@ -50,3 +50,11 @@ func TestNewNotifier(t *testing.T) {
 		t.Fatal("NewNotifier() returned nil")
 	}
 }
+
+// TestAlert_MutedDoesNotPanic verifies that calling Alert in muted mode
+// does not panic, regardless of whether the OS can send notifications.
+func TestAlert_MutedDoesNotPanic(t *testing.T) {
+	n := NewNotifier()
+	// Muted: falls through to beeep.Notify which is silent — should not panic
+	_ = n.Alert("Test", "Test message", true)
+}

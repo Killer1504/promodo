@@ -388,10 +388,16 @@ func (s *Service) onSessionComplete() {
 		slog.Error("failed to persist session", "error", err)
 	}
 
-	// Send OS notification
+	// Send OS notification (respects mute setting)
 	title, msg := notification.SessionCompleteMessage(completedType)
 	go func() {
-		_ = s.notifier.Notify(title, msg)
+		muted := false
+		if s.repo != nil {
+			if settings, err := s.repo.GetSettings(); err == nil {
+				muted = settings.Mute
+			}
+		}
+		_ = s.notifier.Alert(title, msg, muted)
 	}()
 
 	// Determine next break type
