@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"io"
 	"log/slog"
 	"os"
 	"path/filepath"
@@ -28,6 +29,7 @@ type App struct {
 	timer    *timer.Service
 	notifier *notification.Notifier
 	dataDir  string
+	logFile  *os.File
 }
 
 // NewApp creates a new App.
@@ -40,6 +42,18 @@ func NewApp() *App {
 // startup is called by Wails on app launch.
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+
+	// Ensure data directory exists
+	os.MkdirAll(a.dataDir, 0o755)
+
+	// T036: Set up structured file logging
+	logPath := filepath.Join(a.dataDir, "pomodoro.log")
+	f, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o644)
+	if err == nil {
+		a.logFile = f
+		w := io.MultiWriter(os.Stderr, f)
+		slog.SetDefault(slog.New(slog.NewTextHandler(w, &slog.HandlerOptions{Level: slog.LevelInfo})))
+	}
 
 	// Initialize database
 	db, err := storage.NewDatabase(a.dataDir)
@@ -72,6 +86,10 @@ func (a *App) shutdown(ctx context.Context) {
 
 	if a.db != nil {
 		a.db.Close()
+	}
+
+	if a.logFile != nil {
+		a.logFile.Close()
 	}
 
 	slog.Info("app shutdown")

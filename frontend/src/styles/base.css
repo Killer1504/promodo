@@ -80,6 +80,52 @@ button:focus-visible {
     outline-offset: 2px;
 }
 
+/* T037: Keyboard Navigation */
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+/* Error toast */
+.error-toast {
+    position: fixed;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--state-error, #EF4444);
+    color: white;
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-xs);
+    z-index: 100;
+    animation: toastIn var(--transition-normal) ease, toastOut var(--transition-normal) ease 2.5s forwards;
+}
+
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@keyframes toastOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
 .btn-primary {
     background: var(--btn-primary-bg);
     color: var(--btn-primary-text);
