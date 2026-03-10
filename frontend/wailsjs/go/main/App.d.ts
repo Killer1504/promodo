@@ -20,6 +20,8 @@ export function GetWeeklyStats():Promise<Array<storage.DailyStats>>;
 
 export function PauseTimer():Promise<timer.TimerState>;
 
+export function QuitApp():Promise<void>;
+
 export function ResetTimer():Promise<timer.TimerState>;
 
 export function ResetToDefaults():Promise<storage.UserSettings>;
@@ -27,6 +29,8 @@ export function ResetToDefaults():Promise<storage.UserSettings>;
 export function ResumePausedSession():Promise<timer.TimerState>;
 
 export function ResumeTimer():Promise<timer.TimerState>;
+
+export function ShowWindow():Promise<void>;
 
 export function SkipBreakCountdown():Promise<timer.TimerState>;
 

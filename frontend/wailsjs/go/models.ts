@@ -40,13 +40,13 @@ export namespace storage {
 	    }
 	}
 	export class UserSettings {
-	    FocusDuration: number;
-	    ShortBreakDuration: number;
-	    LongBreakDuration: number;
-	    SessionsBeforeLongBreak: number;
-	    NotificationSound: string;
-	    Mute: boolean;
-	    Theme: string;
+	    focusDuration: number;
+	    shortBreakDuration: number;
+	    longBreakDuration: number;
+	    sessionsBeforeLongBreak: number;
+	    notificationSound: string;
+	    mute: boolean;
+	    theme: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new UserSettings(source);
@@ -54,13 +54,13 @@ export namespace storage {
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.FocusDuration = source["FocusDuration"];
-	        this.ShortBreakDuration = source["ShortBreakDuration"];
-	        this.LongBreakDuration = source["LongBreakDuration"];
-	        this.SessionsBeforeLongBreak = source["SessionsBeforeLongBreak"];
-	        this.NotificationSound = source["NotificationSound"];
-	        this.Mute = source["Mute"];
-	        this.Theme = source["Theme"];
+	        this.focusDuration = source["focusDuration"];
+	        this.shortBreakDuration = source["shortBreakDuration"];
+	        this.longBreakDuration = source["longBreakDuration"];
+	        this.sessionsBeforeLongBreak = source["sessionsBeforeLongBreak"];
+	        this.notificationSound = source["notificationSound"];
+	        this.mute = source["mute"];
+	        this.theme = source["theme"];
 	    }
 	}
 

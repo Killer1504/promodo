@@ -4,6 +4,7 @@ go 1.24.0
 
 require (
 	git.sr.ht/~jackmordaunt/go-toast v1.1.2
+	github.com/energye/systray v1.0.3
 	github.com/gen2brain/beeep v0.11.2
 	github.com/wailsapp/wails/v2 v2.11.0
 	modernc.org/sqlite v1.46.1

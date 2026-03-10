@@ -73,6 +73,9 @@ func (a *App) startup(ctx context.Context) {
 	a.timer = timer.NewService(a.repo, a.notifier)
 	a.timer.SetContext(ctx)
 
+	// Start system tray (FR-011)
+	go startTray(ctx)
+
 	slog.Info("app started", "dataDir", a.dataDir)
 }
 

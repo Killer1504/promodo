@@ -192,9 +192,26 @@ export class SettingsView {
       };
 
       await app.UpdateSettings(settings);
+      this._showToast('✓ Settings saved', false);
     } catch (err) {
       console.error('Failed to save settings:', err);
+      this._showToast('✗ Save failed', true);
     }
+  }
+
+  _showToast(message, isError = false) {
+    // Reuse or create the toast element
+    let toast = document.getElementById('settings-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'settings-toast';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.className = 'settings-toast' + (isError ? ' settings-toast--error' : '');
+    toast.classList.add('settings-toast--visible');
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => toast.classList.remove('settings-toast--visible'), 2000);
   }
 
   async resetDefaults() {

@@ -210,3 +210,32 @@
     border-color: var(--state-error);
     color: var(--state-error);
 }
+
+/* Settings Save Toast */
+.settings-toast {
+    position: fixed;
+    bottom: 72px;
+    /* above tab bar */
+    left: 50%;
+    transform: translateX(-50%) translateY(12px);
+    background: var(--accent-primary);
+    color: white;
+    padding: 6px 18px;
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 100;
+    white-space: nowrap;
+}
+
+.settings-toast--error {
+    background: var(--state-error);
+}
+
+.settings-toast--visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}

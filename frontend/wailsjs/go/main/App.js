@@ -34,6 +34,10 @@ export function PauseTimer() {
   return window['go']['main']['App']['PauseTimer']();
 }
 
+export function QuitApp() {
+  return window['go']['main']['App']['QuitApp']();
+}
+
 export function ResetTimer() {
   return window['go']['main']['App']['ResetTimer']();
 }
@@ -48,6 +52,10 @@ export function ResumePausedSession() {
 
 export function ResumeTimer() {
   return window['go']['main']['App']['ResumeTimer']();
+}
+
+export function ShowWindow() {
+  return window['go']['main']['App']['ShowWindow']();
 }
 
 export function SkipBreakCountdown() {
