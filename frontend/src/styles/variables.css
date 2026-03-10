@@ -1,0 +1,210 @@
+/* Design System: Pomodoro Focus Timer
+ * Light and dark theme tokens via CSS custom properties
+ * Supports prefers-color-scheme and [data-theme] override
+ */
+
+:root {
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  /* Typography */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem;
+  --font-size-timer: 3.5rem;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Progress Ring */
+  --ring-size: 220px;
+  --ring-stroke: 8px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 400ms ease;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* ======================== LIGHT THEME ======================== */
+:root,
+[data-theme="light"] {
+  --bg-primary: #FAFBFC;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #F0F2F5;
+  --bg-hover: #E8EBF0;
+
+  --text-primary: #1A1D23;
+  --text-secondary: #5A6070;
+  --text-tertiary: #8C92A0;
+  --text-inverse: #FFFFFF;
+
+  --accent-primary: #3B82F6;
+  --accent-primary-hover: #2563EB;
+  --accent-success: #22C55E;
+  --accent-warning: #F59E0B;
+  --accent-danger: #EF4444;
+
+  --ring-bg: #E8EBF0;
+  --ring-focus: #3B82F6;
+  --ring-short-break: #22C55E;
+  --ring-long-break: #8B5CF6;
+
+  --dot-empty: #D1D5DB;
+  --dot-filled: #3B82F6;
+  --dot-current: #3B82F6;
+
+  --tab-bg: #FFFFFF;
+  --tab-border: #E5E7EB;
+  --tab-active: #3B82F6;
+  --tab-inactive: #8C92A0;
+
+  --btn-primary-bg: #3B82F6;
+  --btn-primary-text: #FFFFFF;
+  --btn-secondary-bg: #F0F2F5;
+  --btn-secondary-text: #1A1D23;
+  --btn-danger-bg: #FEE2E2;
+  --btn-danger-text: #DC2626;
+
+  --border-color: #E5E7EB;
+  --divider: #F0F2F5;
+
+  --input-bg: #FFFFFF;
+  --input-border: #D1D5DB;
+  --input-focus-border: #3B82F6;
+
+  --chart-bar: #3B82F6;
+  --chart-bar-today: #2563EB;
+  --chart-grid: #F0F2F5;
+}
+
+/* ======================== DARK THEME ======================== */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg-primary: #0F1117;
+    --bg-secondary: #1A1D27;
+    --bg-tertiary: #252830;
+    --bg-hover: #2E3140;
+
+    --text-primary: #F0F2F5;
+    --text-secondary: #A0A8B8;
+    --text-tertiary: #6B7280;
+    --text-inverse: #0F1117;
+
+    --accent-primary: #60A5FA;
+    --accent-primary-hover: #93C5FD;
+    --accent-success: #4ADE80;
+    --accent-warning: #FBBF24;
+    --accent-danger: #F87171;
+
+    --ring-bg: #252830;
+    --ring-focus: #60A5FA;
+    --ring-short-break: #4ADE80;
+    --ring-long-break: #A78BFA;
+
+    --dot-empty: #374151;
+    --dot-filled: #60A5FA;
+    --dot-current: #60A5FA;
+
+    --tab-bg: #1A1D27;
+    --tab-border: #252830;
+    --tab-active: #60A5FA;
+    --tab-inactive: #6B7280;
+
+    --btn-primary-bg: #3B82F6;
+    --btn-primary-text: #FFFFFF;
+    --btn-secondary-bg: #252830;
+    --btn-secondary-text: #F0F2F5;
+    --btn-danger-bg: #451A1A;
+    --btn-danger-text: #F87171;
+
+    --border-color: #252830;
+    --divider: #252830;
+
+    --input-bg: #1A1D27;
+    --input-border: #374151;
+    --input-focus-border: #60A5FA;
+
+    --chart-bar: #60A5FA;
+    --chart-bar-today: #93C5FD;
+    --chart-grid: #252830;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  }
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0F1117;
+  --bg-secondary: #1A1D27;
+  --bg-tertiary: #252830;
+  --bg-hover: #2E3140;
+
+  --text-primary: #F0F2F5;
+  --text-secondary: #A0A8B8;
+  --text-tertiary: #6B7280;
+  --text-inverse: #0F1117;
+
+  --accent-primary: #60A5FA;
+  --accent-primary-hover: #93C5FD;
+  --accent-success: #4ADE80;
+  --accent-warning: #FBBF24;
+  --accent-danger: #F87171;
+
+  --ring-bg: #252830;
+  --ring-focus: #60A5FA;
+  --ring-short-break: #4ADE80;
+  --ring-long-break: #A78BFA;
+
+  --dot-empty: #374151;
+  --dot-filled: #60A5FA;
+  --dot-current: #60A5FA;
+
+  --tab-bg: #1A1D27;
+  --tab-border: #252830;
+  --tab-active: #60A5FA;
+  --tab-inactive: #6B7280;
+
+  --btn-primary-bg: #3B82F6;
+  --btn-primary-text: #FFFFFF;
+  --btn-secondary-bg: #252830;
+  --btn-secondary-text: #F0F2F5;
+  --btn-danger-bg: #451A1A;
+  --btn-danger-text: #F87171;
+
+  --border-color: #252830;
+  --divider: #252830;
+
+  --input-bg: #1A1D27;
+  --input-border: #374151;
+  --input-focus-border: #60A5FA;
+
+  --chart-bar: #60A5FA;
+  --chart-bar-today: #93C5FD;
+  --chart-grid: #252830;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+}

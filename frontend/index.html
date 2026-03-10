@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Pomodoro Focus Timer</title>
+    <link rel="stylesheet" href="./src/styles/variables.css" />
+    <link rel="stylesheet" href="./src/styles/base.css" />
+    <link rel="stylesheet" href="./src/styles/tab-bar.css" />
+    <link rel="stylesheet" href="./src/styles/timer.css" />
+    <link rel="stylesheet" href="./src/styles/stats.css" />
+    <link rel="stylesheet" href="./src/styles/settings.css" />
+</head>
+
+<body>
+    <div id="app">
+        <!-- Views Container -->
+        <div class="view-container">
+            <div id="view-timer" class="view active" role="tabpanel" aria-labelledby="tab-timer">
+                <!-- Timer view content injected by timer.js -->
+            </div>
+            <div id="view-stats" class="view" role="tabpanel" aria-labelledby="tab-stats">
+                <!-- Stats view content injected by stats.js -->
+            </div>
+            <div id="view-settings" class="view" role="tabpanel" aria-labelledby="tab-settings">
+                <!-- Settings view content injected by settings.js -->
+            </div>
+        </div>
+
+        <!-- Bottom Tab Bar -->
+        <div id="tab-bar"></div>
+    </div>
+    <script src="./src/main.js" type="module"></script>
+</body>
+
+</html>

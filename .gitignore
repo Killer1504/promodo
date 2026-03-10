@@ -1,0 +1,28 @@
+# Binaries
+build/bin
+*.exe
+*.test
+*.out
+
+# Frontend
+node_modules
+frontend/dist
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+
+# Go
+vendor/
+
+# Environment
+.env*
+
+# Temporary scripts
+setup.ps1
