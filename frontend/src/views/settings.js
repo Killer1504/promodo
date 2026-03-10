@@ -144,10 +144,11 @@ export class SettingsView {
   }
 
   async loadSettings() {
-    try {
-      const app = window.go?.main?.App;
-      if (!app) return;
+    // window.go might not be ready yet on first activation — wait for it
+    const app = await this._waitForApp();
+    if (!app) return;
 
+    try {
       const s = await app.GetSettings();
       if (!s) return;
       this.settings = s;
@@ -170,6 +171,19 @@ export class SettingsView {
     } catch (err) {
       console.error('Failed to load settings:', err);
     }
+  }
+
+  /** Waits up to 2s for window.go.main.App to be bound by Wails. */
+  _waitForApp(retries = 20, delayMs = 100) {
+    return new Promise((resolve) => {
+      const check = (n) => {
+        const app = window.go?.main?.App;
+        if (app) return resolve(app);
+        if (n <= 0) return resolve(null);
+        setTimeout(() => check(n - 1), delayMs);
+      };
+      check(retries);
+    });
   }
 
   async saveSettings() {
