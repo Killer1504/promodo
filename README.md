@@ -46,6 +46,25 @@ wails build
 
 The built binary will be in `build/bin/`.
 
+### 📦 Build MSI Installer
+
+To create a Windows Installer (`.msi`) package:
+
+**Additional prerequisites**: [.NET SDK 8+](https://dotnet.microsoft.com/download), [WiX Toolset v4](https://wixtoolset.org/) (`dotnet tool install --global wix`)
+
+```powershell
+# Build MSI (includes wails build + WiX packaging)
+.\build\msi\build-msi.ps1
+
+# With version override
+.\build\msi\build-msi.ps1 -Version "2.0.0"
+
+# Skip wails build if exe already exists
+.\build\msi\build-msi.ps1 -SkipWailsBuild
+```
+
+Output: `build/bin/PomodoroFocusTimer-{version}-x64.msi` (~7 MB)
+
 ## 🧪 Running Tests
 
 ```bash

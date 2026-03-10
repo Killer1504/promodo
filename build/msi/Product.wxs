@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  WiX v4/v6 Installer Definition for Pomodoro Focus Timer
+  
+  UpgradeCode: F0258CBE-6E3A-411F-8DD9-022EC07DBF05
+  IMPORTANT: This GUID must NEVER change across versions.
+  It identifies the product family for major upgrades.
+  
+  Build with: wix build Product.wxs -ext WixToolset.UI.wixext -d Version=1.0.0 -d BuildDir=..\..\build\bin -o ..\..\build\bin\PomodoroFocusTimer-1.0.0-x64.msi
+-->
+
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <Package Name="Pomodoro Focus Timer"
+           Manufacturer="hung le"
+           Version="$(var.Version)"
+           UpgradeCode="F0258CBE-6E3A-411F-8DD9-022EC07DBF05"
+           Scope="perMachine"
+           Language="1033"
+           Compressed="yes"
+           InstallerVersion="500">
+
+    <!-- Major Upgrade: automatically removes previous versions -->
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed."
+                  Schedule="afterInstallInitialize" />
+
+    <!-- Embed all files in a single .cab inside the .msi -->
+    <MediaTemplate EmbedCab="yes" />
+
+    <!-- Application icon for Add/Remove Programs -->
+    <Icon Id="AppIcon.ico" SourceFile="$(var.IconPath)" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon.ico" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/hungle" />
+
+    <!-- ==================== Directory Structure ==================== -->
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="Pomodoro Focus Timer">
+        <!-- All application files go here -->
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="Pomodoro Focus Timer" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder" />
+
+    <!-- ==================== Components ==================== -->
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+
+      <!-- Main application executable -->
+      <Component Id="MainExecutable" Bitness="always64">
+        <File Id="PomodoroFocusTimer.exe"
+              Source="$(var.BuildDir)\PomodoroFocusTimer.exe"
+              KeyPath="yes" />
+      </Component>
+
+    </ComponentGroup>
+
+    <!-- Start Menu Shortcut -->
+    <ComponentGroup Id="ShortcutComponents" Directory="ApplicationProgramsFolder">
+      <Component Id="StartMenuShortcut" Bitness="always64">
+        <Shortcut Id="StartMenuShortcut"
+                  Name="Pomodoro Focus Timer"
+                  Description="A sleek desktop Pomodoro timer"
+                  Target="[INSTALLFOLDER]PomodoroFocusTimer.exe"
+                  Icon="AppIcon.ico"
+                  WorkingDirectory="INSTALLFOLDER" />
+        <RemoveFolder Id="CleanUpStartMenuFolder" On="uninstall" />
+        <RegistryValue Root="HKCU"
+                       Key="Software\hung le\Pomodoro Focus Timer"
+                       Name="StartMenuShortcut"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- Desktop Shortcut -->
+    <ComponentGroup Id="DesktopShortcutComponents" Directory="DesktopFolder">
+      <Component Id="DesktopShortcut" Bitness="always64">
+        <Shortcut Id="DesktopShortcut"
+                  Name="Pomodoro Focus Timer"
+                  Description="A sleek desktop Pomodoro timer"
+                  Target="[INSTALLFOLDER]PomodoroFocusTimer.exe"
+                  Icon="AppIcon.ico"
+                  WorkingDirectory="INSTALLFOLDER" />
+        <RegistryValue Root="HKCU"
+                       Key="Software\hung le\Pomodoro Focus Timer"
+                       Name="DesktopShortcut"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- WebView2 Bootstrapper (custom action) -->
+    <ComponentGroup Id="WebView2Components" Directory="INSTALLFOLDER">
+      <Component Id="WebView2Bootstrapper" Bitness="always64">
+        <File Id="MicrosoftEdgeWebview2Setup.exe"
+              Source="WebView2\MicrosoftEdgeWebview2Setup.exe"
+              KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <!-- ==================== Custom Actions ==================== -->
+
+    <!-- Run WebView2 bootstrapper silently after install -->
+    <CustomAction Id="InstallWebView2Runtime"
+                  FileRef="MicrosoftEdgeWebview2Setup.exe"
+                  ExeCommand="/silent /install"
+                  Execute="deferred"
+                  Impersonate="no"
+                  Return="check" />
+
+    <InstallExecuteSequence>
+      <Custom Action="InstallWebView2Runtime" Before="InstallFinalize"
+              Condition="NOT Installed AND NOT REMOVE" />
+    </InstallExecuteSequence>
+
+    <!-- ==================== Features ==================== -->
+    <Feature Id="ProductFeature" Title="Pomodoro Focus Timer" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="ShortcutComponents" />
+      <ComponentGroupRef Id="DesktopShortcutComponents" />
+      <ComponentGroupRef Id="WebView2Components" />
+    </Feature>
+
+    <!-- ==================== UI ==================== -->
+    <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+
+  </Package>
+</Wix>

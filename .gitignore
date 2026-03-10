@@ -26,3 +26,8 @@ vendor/
 
 # Temporary scripts
 setup.ps1
+
+# MSI Build Artifacts
+build/msi/WebView2/
+*.msi
+*.wixpdb
