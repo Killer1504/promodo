@@ -7,7 +7,7 @@
   "frontend:dev:watcher": "npm run dev",
   "frontend:dev:serverUrl": "auto",
   "info": {
-    "productVersion": "1.1.0",
+    "productVersion": "1.2.0",
     "companyName": "hung le",
     "productName": "Pomodoro Focus Timer",
     "copyright": "Copyright 2026 hung le",
