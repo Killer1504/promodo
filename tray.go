@@ -24,6 +24,11 @@ func startTray(ctx context.Context) {
 		systray.SetTitle("Pomodoro Focus Timer")
 		systray.SetTooltip("Pomodoro Focus Timer — running in background")
 
+		// Double-click the tray icon → show window (standard Windows UX)
+		systray.SetOnDClick(func(_ systray.IMenu) {
+			wailsRuntime.WindowShow(ctx)
+		})
+
 		mShow := systray.AddMenuItem("🍅 Show Window", "Restore the timer window")
 		systray.AddSeparator()
 		mQuit := systray.AddMenuItem("Quit", "Exit Pomodoro Focus Timer")
