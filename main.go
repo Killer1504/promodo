@@ -13,6 +13,12 @@ import (
 var assets embed.FS
 
 func main() {
+	// Enforce single-instance: if another copy is already running,
+	// bring its window to the foreground and exit this new process.
+	if ensureSingleInstance() {
+		return
+	}
+
 	app := NewApp()
 
 	err := wails.Run(&options.App{
