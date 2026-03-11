@@ -29,9 +29,11 @@ func startTray(ctx context.Context) {
 			wailsRuntime.WindowShow(ctx)
 		})
 
-		mShow := systray.AddMenuItem("🍅 Show Window", "Restore the timer window")
+		mShow := systray.AddMenuItem("Show Window", "Restore the timer window")
+		mShow.SetIcon(appIcon)
 		systray.AddSeparator()
 		mQuit := systray.AddMenuItem("Quit", "Exit Pomodoro Focus Timer")
+		mQuit.SetIcon(appIcon)
 
 		mShow.Click(func() {
 			wailsRuntime.WindowShow(ctx)
