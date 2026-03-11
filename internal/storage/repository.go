@@ -30,9 +30,10 @@ type UserSettings struct {
 
 // DailyStats holds aggregated focus data for a single day.
 type DailyStats struct {
-	Date              string
-	TotalSessions     int
-	TotalFocusMinutes int
+	Date              string `json:"date"`
+	TotalSessions     int    `json:"totalSessions"`
+	TotalFocusMinutes int    `json:"totalFocusMinutes"`
+	IsToday           bool   `json:"isToday"`
 }
 
 // Repository provides data access methods for sessions and settings.
@@ -94,22 +95,43 @@ func (r *Repository) GetSessionsByDateRange(from, to time.Time) ([]FocusSession,
 	return sessions, rows.Err()
 }
 
-// GetDailyStats returns aggregated focus stats grouped by day, for the last N days.
-func (r *Repository) GetDailyStats(days int) ([]DailyStats, error) {
+// GetTodayStats returns focus stats for today (local timezone).
+func (r *Repository) GetTodayStats() (DailyStats, error) {
+	var ds DailyStats
+	ds.IsToday = true
+	err := r.db.QueryRow(
+		`SELECT COALESCE(COUNT(*), 0),
+		        COALESCE(SUM(duration_seconds) / 60, 0)
+		 FROM focus_sessions
+		 WHERE session_type = 'focus'
+		   AND completed = 1
+		   AND DATE(start_time, 'localtime') = DATE('now', 'localtime')`,
+	).Scan(&ds.TotalSessions, &ds.TotalFocusMinutes)
+	if err != nil {
+		return ds, fmt.Errorf("get today stats: %w", err)
+	}
+	ds.Date = "today"
+	return ds, nil
+}
+
+// GetWeeklyStats returns aggregated focus stats for the last N days (local timezone).
+func (r *Repository) GetWeeklyStats(days int) ([]DailyStats, error) {
+	today := "DATE('now', 'localtime')"
 	rows, err := r.db.Query(
-		`SELECT DATE(start_time) AS date,
+		`SELECT DATE(start_time, 'localtime') AS date,
 		        COUNT(*) AS total_sessions,
 		        COALESCE(SUM(duration_seconds) / 60, 0) AS total_focus_minutes
 		 FROM focus_sessions
 		 WHERE session_type = 'focus'
 		   AND completed = 1
-		   AND start_time >= DATE('now', ?)
-		 GROUP BY DATE(start_time)
-		 ORDER BY date DESC`,
-		fmt.Sprintf("-%d days", days),
+		   AND DATE(start_time, 'localtime') >= DATE('now', 'localtime', ?)
+		 GROUP BY DATE(start_time, 'localtime')
+		 ORDER BY date ASC`,
+		fmt.Sprintf("-%d days", days-1),
 	)
+	_ = today // used conceptually above
 	if err != nil {
-		return nil, fmt.Errorf("query daily stats: %w", err)
+		return nil, fmt.Errorf("query weekly stats: %w", err)
 	}
 	defer rows.Close()
 

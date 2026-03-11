@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	"pomodoro-timer/internal/notification"
+	"pomodoro-timer/internal/stats"
 	"pomodoro-timer/internal/storage"
 	"pomodoro-timer/internal/timer"
 
@@ -29,6 +30,7 @@ type App struct {
 	db       *storage.Database
 	repo     *storage.Repository
 	timer    *timer.Service
+	stats    *stats.Service
 	notifier *notification.Notifier
 	dataDir  string
 	logFile  *os.File
@@ -72,6 +74,9 @@ func (a *App) startup(ctx context.Context) {
 	// Initialize timer service
 	a.timer = timer.NewService(a.repo, a.notifier)
 	a.timer.SetContext(ctx)
+
+	// Initialize stats service
+	a.stats = stats.NewService(a.repo)
 
 	// Start system tray (FR-011)
 	go startTray(ctx)
@@ -181,20 +186,13 @@ func (a *App) ResetToDefaults() (*storage.UserSettings, error) {
 // --- Stats bindings ---
 
 // GetTodayStats returns today's focus stats.
-func (a *App) GetTodayStats() (*storage.DailyStats, error) {
-	stats, err := a.repo.GetDailyStats(1)
-	if err != nil {
-		return nil, err
-	}
-	if len(stats) == 0 {
-		return &storage.DailyStats{TotalSessions: 0, TotalFocusMinutes: 0}, nil
-	}
-	return &stats[0], nil
+func (a *App) GetTodayStats() stats.DailyStatsResponse {
+	return a.stats.GetTodayStats()
 }
 
-// GetWeeklyStats returns 7 days of stats.
-func (a *App) GetWeeklyStats() ([]storage.DailyStats, error) {
-	return a.repo.GetDailyStats(7)
+// GetWeeklyStats returns 7 days of stats with gap-filling.
+func (a *App) GetWeeklyStats() []stats.DailyStatsResponse {
+	return a.stats.GetWeeklyStats()
 }
 
 // --- Theme ---

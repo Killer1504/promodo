@@ -45,10 +45,10 @@ export class StatsView {
     }
 
     async loadStats() {
-        try {
-            const app = window.go?.main?.App;
-            if (!app) return;
+        const app = await this._waitForApp();
+        if (!app) return;
 
+        try {
             const [today, weekly] = await Promise.all([
                 app.GetTodayStats(),
                 app.GetWeeklyStats(),
@@ -59,6 +59,19 @@ export class StatsView {
         } catch (err) {
             console.error('Failed to load stats:', err);
         }
+    }
+
+    /** Waits up to 2s for window.go.main.App to be bound by Wails. */
+    _waitForApp(retries = 20, delayMs = 100) {
+        return new Promise((resolve) => {
+            const check = (n) => {
+                const app = window.go?.main?.App;
+                if (app) return resolve(app);
+                if (n <= 0) return resolve(null);
+                setTimeout(() => check(n - 1), delayMs);
+            };
+            check(retries);
+        });
     }
 
     updateSummary(today) {

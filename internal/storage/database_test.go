@@ -107,9 +107,9 @@ func TestInsertSession_And_Query(t *testing.T) {
 func TestGetDailyStats_Empty(t *testing.T) {
 	_, repo := setupTestDB(t)
 
-	stats, err := repo.GetDailyStats(7)
+	stats, err := repo.GetWeeklyStats(7)
 	if err != nil {
-		t.Fatalf("get daily stats: %v", err)
+		t.Fatalf("get weekly stats: %v", err)
 	}
 	if len(stats) != 0 {
 		t.Errorf("expected 0 stats for empty db, got %d", len(stats))
@@ -142,9 +142,9 @@ func TestGetDailyStats_WithData(t *testing.T) {
 		Completed:       true,
 	})
 
-	stats, err := repo.GetDailyStats(7)
+	stats, err := repo.GetWeeklyStats(7)
 	if err != nil {
-		t.Fatalf("get daily stats: %v", err)
+		t.Fatalf("get weekly stats: %v", err)
 	}
 	if len(stats) == 0 {
 		t.Fatal("expected at least 1 day of stats")

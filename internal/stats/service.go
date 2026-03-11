@@ -26,32 +26,21 @@ func NewService(repo *storage.Repository) *Service {
 
 // GetTodayStats returns today's focus session count and total minutes.
 func (s *Service) GetTodayStats() DailyStatsResponse {
-	stats, err := s.repo.GetDailyStats(1)
-	if err != nil || len(stats) == 0 {
-		return DailyStatsResponse{
-			Date:    today(),
-			IsToday: true,
-		}
+	ds, err := s.repo.GetTodayStats()
+	if err != nil {
+		return DailyStatsResponse{Date: today(), IsToday: true}
 	}
-
-	todayStr := today()
-	for _, ds := range stats {
-		if ds.Date == todayStr {
-			return DailyStatsResponse{
-				Date:              ds.Date,
-				TotalSessions:     ds.TotalSessions,
-				TotalFocusMinutes: ds.TotalFocusMinutes,
-				IsToday:           true,
-			}
-		}
+	return DailyStatsResponse{
+		Date:              today(),
+		TotalSessions:     ds.TotalSessions,
+		TotalFocusMinutes: ds.TotalFocusMinutes,
+		IsToday:           true,
 	}
-
-	return DailyStatsResponse{Date: todayStr, IsToday: true}
 }
 
 // GetWeeklyStats returns the last 7 days of daily stats, filling gaps with zeros.
 func (s *Service) GetWeeklyStats() []DailyStatsResponse {
-	raw, err := s.repo.GetDailyStats(7)
+	raw, err := s.repo.GetWeeklyStats(7)
 	if err != nil {
 		raw = nil
 	}
