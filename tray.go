@@ -13,6 +13,9 @@ import (
 //go:embed build/windows/icon.ico
 var appIcon []byte
 
+//go:embed build/windows/show-icon.ico
+var showIcon []byte
+
 //go:embed build/windows/quit-icon.ico
 var quitIcon []byte
 
@@ -33,7 +36,7 @@ func startTray(ctx context.Context) {
 		})
 
 		mShow := systray.AddMenuItem("Show Window", "Restore the timer window")
-		mShow.SetIcon(appIcon)
+		mShow.SetIcon(showIcon)
 		systray.AddSeparator()
 		mQuit := systray.AddMenuItem("Quit", "Exit Pomodoro Focus Timer")
 		mQuit.SetIcon(quitIcon)
