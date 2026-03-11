@@ -3,6 +3,7 @@
 import {main} from '../models';
 import {storage} from '../models';
 import {timer} from '../models';
+import {stats} from '../models';
 
 export function DiscardPausedSession():Promise<boolean>;
 
@@ -14,9 +15,9 @@ export function GetTheme():Promise<string>;
 
 export function GetTimerState():Promise<timer.TimerState>;
 
-export function GetTodayStats():Promise<storage.DailyStats>;
+export function GetTodayStats():Promise<stats.DailyStatsResponse>;
 
-export function GetWeeklyStats():Promise<Array<storage.DailyStats>>;
+export function GetWeeklyStats():Promise<Array<stats.DailyStatsResponse>>;
 
 export function PauseTimer():Promise<timer.TimerState>;
 

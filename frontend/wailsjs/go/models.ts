@@ -21,24 +21,31 @@ export namespace main {
 
 }
 
-export namespace storage {
+export namespace stats {
 	
-	export class DailyStats {
-	    Date: string;
-	    TotalSessions: number;
-	    TotalFocusMinutes: number;
+	export class DailyStatsResponse {
+	    date: string;
+	    totalSessions: number;
+	    totalFocusMinutes: number;
+	    isToday: boolean;
 	
 	    static createFrom(source: any = {}) {
-	        return new DailyStats(source);
+	        return new DailyStatsResponse(source);
 	    }
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.Date = source["Date"];
-	        this.TotalSessions = source["TotalSessions"];
-	        this.TotalFocusMinutes = source["TotalFocusMinutes"];
+	        this.date = source["date"];
+	        this.totalSessions = source["totalSessions"];
+	        this.totalFocusMinutes = source["totalFocusMinutes"];
+	        this.isToday = source["isToday"];
 	    }
 	}
+
+}
+
+export namespace storage {
+	
 	export class UserSettings {
 	    focusDuration: number;
 	    shortBreakDuration: number;
