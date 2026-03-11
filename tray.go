@@ -13,6 +13,9 @@ import (
 //go:embed build/windows/icon.ico
 var appIcon []byte
 
+//go:embed build/windows/quit-icon.ico
+var quitIcon []byte
+
 // startTray sets up the system tray icon with Show / Quit menu items.
 // Pinned to an OS thread — required for the Windows message pump.
 func startTray(ctx context.Context) {
@@ -33,7 +36,7 @@ func startTray(ctx context.Context) {
 		mShow.SetIcon(appIcon)
 		systray.AddSeparator()
 		mQuit := systray.AddMenuItem("Quit", "Exit Pomodoro Focus Timer")
-		mQuit.SetIcon(appIcon)
+		mQuit.SetIcon(quitIcon)
 
 		mShow.Click(func() {
 			wailsRuntime.WindowShow(ctx)
